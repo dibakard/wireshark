@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<title>sdjournal(1)</title>
+<link rel="stylesheet" href="./ws.css">
+</head>
+<body class="manpage">
+<div id="header">
+<h1>sdjournal(1) Manual Page</h1>
+<h2 id="_name">NAME</h2>
+<div class="sectionbody">
+<p>sdjournal - Provide an interface to capture systemd journal entries.</p>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_synopsis">SYNOPSIS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="nowrap"><strong>sdjournal</strong></span>
+<span class="nowrap">[ <strong>--help</strong> ]</span>
+<span class="nowrap">[ <strong>--version</strong> ]</span>
+<span class="nowrap">[ <strong>--extcap-interfaces</strong> ]</span>
+<span class="nowrap">[ <strong>--extcap-dlts</strong> ]</span>
+<span class="nowrap">[ <strong>--extcap-interface</strong>=&lt;interface&gt; ]</span>
+<span class="nowrap">[ <strong>--extcap-config</strong> ]</span>
+<span class="nowrap">[ <strong>--capture</strong> ]</span>
+<span class="nowrap">[ <strong>--fifo</strong>=&lt;path to file or pipe&gt; ]</span>
+<span class="nowrap">[ <strong>--start-from</strong>=&lt;entry count&gt; ]</span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_description">DESCRIPTION</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>sdjournal</strong> is an extcap tool that allows one to capture systemd
+journal entries. It can be used to correlate system events with
+network traffic.</p>
+</div>
+<div class="paragraph">
+<p>Supported interfaces:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>sdjournal</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_options">OPTIONS</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">--help</dt>
+<dd>
+<p>Print program arguments.</p>
+</dd>
+<dt class="hdlist1">--version</dt>
+<dd>
+<p>Print program version.</p>
+</dd>
+<dt class="hdlist1">--extcap-interfaces</dt>
+<dd>
+<p>List available interfaces.</p>
+</dd>
+<dt class="hdlist1">--extcap-interface=&lt;interface&gt;</dt>
+<dd>
+<p>Use specified interfaces.</p>
+</dd>
+<dt class="hdlist1">--extcap-dlts</dt>
+<dd>
+<p>List DLTs of specified interface.</p>
+</dd>
+<dt class="hdlist1">--extcap-config</dt>
+<dd>
+<p>List configuration options of specified interface.</p>
+</dd>
+<dt class="hdlist1">--capture</dt>
+<dd>
+<p>Start capturing from specified interface and write raw packet data to the location specified by --fifo.</p>
+</dd>
+<dt class="hdlist1">--fifo=&lt;path to file or pipe&gt;</dt>
+<dd>
+<p>Save captured packet to file or send it through pipe.</p>
+</dd>
+<dt class="hdlist1">--start-from=&lt;entry count&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Start from the last &lt;entry count&gt; entries, similar to the
+"-n" or "--lines" argument for the tail(1) command. Values prefixed
+with a <strong>+</strong> sign start from the beginning of the journal, otherwise
+the count starts from the end. The default value is 10. To include
+all entries use <strong>+0</strong>.</p>
+</div>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples">EXAMPLES</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To see program arguments:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sdjournal --help</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see program version:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sdjournal --version</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see interfaces:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sdjournal --extcap-interfaces</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Only one interface (sdjournal) is supported.</p>
+</div>
+<div class="literalblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre>interface {value=sdjournal}{display=systemd journal capture}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see interface DLTs:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sdjournal --extcap-interface=sdjournal --extcap-dlts</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre>dlt {number=147}{name=sdjournal}{display=USER0}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see interface configuration options:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sdjournal --extcap-interface=sdjournal --extcap-config</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre>arg {number=0}{call=--start-from}{display=Starting position}{type=string}
+    {tooltip=The journal starting position. Values with a leading "+" start from the beginning, similar to the "tail" command}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To capture:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sdjournal --extcap-interface=sdjournal --fifo=/tmp/sdjournal.pcap --capture</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To capture all entries since the system was booted:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>sdjournal --extcap-interface=sdjournal --fifo=/tmp/sdjournal.pcap --capture --start-from +0</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+To stop capturing CTRL+C/kill/terminate the application.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_see_also">SEE ALSO</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="wireshark.html">wireshark</a>(1), <a href="tshark.html">tshark</a>(1), <a href="dumpcap.html">dumpcap</a>(1), <a href="extcap.html">extcap</a>(4), <a href="https://www.tcpdump.org/manpages/tcpdump.1.html">tcpdump</a>(1)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_notes">NOTES</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>sdjournal</strong> is part of the <strong>Wireshark</strong> distribution.  The latest version
+of <strong>Wireshark</strong> can be found at <a href="https://www.wireshark.org" class="bare">https://www.wireshark.org</a>.</p>
+</div>
+<div class="paragraph">
+<p>HTML versions of the Wireshark project man pages are available at
+<a href="https://www.wireshark.org/docs/man-pages" class="bare">https://www.wireshark.org/docs/man-pages</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_authors">AUTHORS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">Original Author</div>
+<p>Gerald Combs &lt;gerald[AT]wireshark.org&gt;</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

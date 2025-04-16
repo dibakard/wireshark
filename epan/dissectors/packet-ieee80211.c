@@ -5242,6 +5242,7 @@ static int hf_ieee80211_block_ack_multi_tid_reserved;
 static int hf_ieee80211_block_ack_multi_tid_value;
 static int hf_ieee80211_block_ack_bitmap;
 static int hf_ieee80211_block_ack_bitmap_missing_frame;
+static int hf_ieee80211_block_ack_bitmap_blocked_frame;
 static int hf_ieee80211_block_ack_gcr_addr;
 
 static int hf_ieee80211_block_ack_multi_sta_aid11;
@@ -37391,11 +37392,29 @@ dissect_ieee80211_block_ack_details(tvbuff_t *tvb, packet_info *pinfo _U_,
                           tvb, offset, bytes, ENC_NA);
       ba_bitmap_tree = proto_item_add_subtree(ba_bitmap_item,
                           ett_block_ack_bitmap);
+      bool isholblock = false;
+      //unsigned int blocked_by = 0;                          
       for (i = 0; i < (bytes * 8); i += 64) {
         bmap = tvb_get_letoh64(tvb, offset + i/8);
         for (f = 0; f < 64; f++) {
-          if (bmap & (UINT64_C(1) << f))
-            continue;
+          if (bmap & (UINT64_C(1) << f) ){
+            if (isholblock){
+              proto_tree_add_uint_format_value(ba_bitmap_tree,
+                hf_ieee80211_block_ack_bitmap_blocked_frame,
+                tvb, offset + ((f + i)/8), 1, ssn + f + i, "%u",
+                (ssn + f + i) & 0x0fff);
+
+            }
+            else{
+              continue;
+            }
+
+          }
+          if (!isholblock){
+            isholblock = true;
+            //blocked_by = ssn + f + i;
+          }
+          
           proto_tree_add_uint_format_value(ba_bitmap_tree,
                           hf_ieee80211_block_ack_bitmap_missing_frame,
                           tvb, offset + ((f + i)/8), 1, ssn + f + i, "%u",
@@ -43140,6 +43159,10 @@ proto_register_ieee80211(void)
      {"Missing frame", "wlan.ba.bm.missing_frame",
       FT_UINT32, BASE_DEC, NULL, 0,
       NULL, HFILL }},
+    {&hf_ieee80211_block_ack_bitmap_blocked_frame,
+        {"HOL-blocked frame", "wlan.ba.bm.blocked_frame",
+         FT_UINT32, BASE_DEC, NULL, 0,
+         NULL, HFILL }},    
 
     {&hf_ieee80211_block_ack_gcr_addr,
      {"GCR Group Address", "wlan.ba.gcr_group_addr",
